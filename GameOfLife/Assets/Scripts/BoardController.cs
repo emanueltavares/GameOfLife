@@ -3,20 +3,26 @@ using UnityEngine;
 
 namespace EmanuelTavares.GameOfLife.Controllers
 {
-    public class BoardController : MonoBehaviour
+    public class BoardController : MonoBehaviour, IBoardController
     {
         // Serialized Fields
+        [SerializeField] private float _maxTimeBetweenUpdates = 1f;
+        [SerializeField] private int _numLines = 25;
+        [SerializeField] private int _numColumns = 25;
+        [SerializeField] private float _cellWidth = 0.25f;
+        [SerializeField] private float _cellHeight = 0.25f;
+        [SerializeField] private bool _paused = false;
         #pragma warning disable CS0649
-        [SerializeField] private int _numLines;
-        [SerializeField] private int _numColumns;
-        [SerializeField] private float _cellWidth;
-        [SerializeField] private float _cellHeight;
         [SerializeField] private GameObject _cellPrefab;
+        [SerializeField] private TMPro.TextMeshProUGUI _simulationStepText;
         #pragma warning restore CS0649
 
         // Private variables
         private IBoardModel _boardModel = default;
         private ICellModel _cellModelPrototype = default;
+        private float _elapsedTimeSinceLastUpdate = 0f;
+
+        public int SimulationStep { get; private set; }
 
         protected virtual void OnEnable()
         {
@@ -26,6 +32,30 @@ namespace EmanuelTavares.GameOfLife.Controllers
             }
 
             BuildBoard(_numLines, _numColumns, _cellModelPrototype, _cellWidth, _cellHeight);
+
+            _simulationStepText.text = string.Format("Simulation Step: {0}", SimulationStep.ToString());
+
+            if (!_paused)
+            {
+                Play();
+            }
+        }
+
+        protected virtual void Update()
+        {
+            if (!_paused)
+            {
+                _elapsedTimeSinceLastUpdate += Time.deltaTime;
+
+                if (_elapsedTimeSinceLastUpdate >= _maxTimeBetweenUpdates)
+                {
+                    _elapsedTimeSinceLastUpdate -= _maxTimeBetweenUpdates;
+                    _boardModel.UpdateModel();
+                    SimulationStep += 1;
+
+                    _simulationStepText.text = string.Format("Simulation Step: {0}", SimulationStep.ToString());
+                }
+            }
         }
 
         private void BuildBoard(int numLines, int numColumns, ICellModel cellModelPrototype, float cellWidth = 1f, float cellHeight = 1f)
@@ -50,6 +80,27 @@ namespace EmanuelTavares.GameOfLife.Controllers
                     cellModelInstance.Transform.parent = transform;
                 }
             }
+        }
+
+        public void Play()
+        {
+            _paused = false;
+        }
+
+        public void Pause()
+        {
+            _paused = true;
+        }
+
+        public void Stop()
+        {
+            _boardModel.ResetModel();
+            
+            // Update simulation step
+            SimulationStep = 0;
+            _simulationStepText.text = string.Format("Simulation Step: {0}", SimulationStep.ToString());
+
+            _paused = true;
         }
     }
 }

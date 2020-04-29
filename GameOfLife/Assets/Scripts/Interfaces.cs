@@ -9,6 +9,9 @@ namespace EmanuelTavares.GameOfLife.Models
         float CellWidth { get; }
         float CellHeight { get; }
         ICellModel[,] Cells { get; }
+
+        void UpdateModel();
+        void ResetModel();
     }
 
     public interface ICellModel
@@ -17,5 +20,14 @@ namespace EmanuelTavares.GameOfLife.Models
         ICellModel Clone();
         GameObject GameObject { get; }
         Transform Transform { get; }
+    }
+
+    public interface IBoardController
+    {
+        int SimulationStep { get; }
+
+        void Play();
+        void Pause();
+        void Stop();
     }
 }
