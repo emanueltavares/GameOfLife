@@ -1,5 +1,7 @@
 ﻿using EmanuelTavares.GameOfLife.Models;
+using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace EmanuelTavares.GameOfLife.Controllers
 {
@@ -30,11 +32,13 @@ namespace EmanuelTavares.GameOfLife.Controllers
                 }
             }
         }
+        public int Column { get; private set; }
+        public int Line { get; private set; }
         public GameObject GameObject { get => gameObject; }
         public Transform Transform { get => transform; }
+        public UnityEvent<ICellModel> OnClick { get; private set; } = new CellModelClickEvent();
 
         // Methods
-
         protected virtual void OnValidate()
         {
             if (_isAlive)
@@ -47,9 +51,21 @@ namespace EmanuelTavares.GameOfLife.Controllers
             }
         }
 
+        protected virtual void OnDisable()
+        {
+            OnClick?.RemoveAllListeners();
+        }
+
+        protected virtual void OnMouseUpAsButton()
+        {
+            OnClick?.Invoke(this);
+        }
+
         public ICellModel Clone()
         {
             return Instantiate(this);
         }
     }
+
+    public class CellModelClickEvent : UnityEvent<ICellModel> { }
 }

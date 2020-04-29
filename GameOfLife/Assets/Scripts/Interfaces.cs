@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 namespace EmanuelTavares.GameOfLife.Models
 {
@@ -20,6 +21,7 @@ namespace EmanuelTavares.GameOfLife.Models
         ICellModel Clone();
         GameObject GameObject { get; }
         Transform Transform { get; }
+        UnityEvent<ICellModel> OnClick { get; }
     }
 
     public interface IBoardController

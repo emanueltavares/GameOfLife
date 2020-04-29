@@ -1,4 +1,4 @@
-﻿using EmanuelTavares.GameOfLife.Utils;
+﻿using UnityEngine;
 
 namespace EmanuelTavares.GameOfLife.Models
 {
@@ -11,9 +11,6 @@ namespace EmanuelTavares.GameOfLife.Models
         public float CellHeight { get; private set; }
         public ICellModel[,] Cells { get; private set; }
 
-        // Private variables
-        private readonly bool[,] _cellsStates = new bool[0, 0];
-
         public BoardModel(int numLines, int numColumns, ICellModel cellModelPrototype, float cellWidth = 1f, float cellHeight = 1f)
         {
             NumLines = numLines;
@@ -22,16 +19,12 @@ namespace EmanuelTavares.GameOfLife.Models
             CellHeight = cellHeight;
             
             Cells = new ICellModel[NumLines, NumColumns];
-            _cellsStates = new bool[NumLines, NumColumns];
             for (int i = 0; i < numLines; i++)
             {
                 for (int j = 0; j < numColumns; j++)
                 {
                     Cells[i, j] = cellModelPrototype.Clone();
-
-                    Cells[i, j].IsAlive = RandomExt.GetNextBool();
-
-                    _cellsStates[i, j] = Cells[i, j].IsAlive;
+                    //Cells[i, j].IsAlive = RandomExt.GetNextBool();
                 }
             }
         }
@@ -44,73 +37,94 @@ namespace EmanuelTavares.GameOfLife.Models
             {
                 for (int j = 0; j < NumColumns; j++)
                 {
+                    //string debugMessage = string.Format( "{0}:{1} ", i, j);
+
                     // count neighbours
                     int countAliveNeighbours = 0;
 
-                    // 1
-                    if (i - 1 >= 0 && _cellsStates[i - 1, j])
+                    int top = i - 1;
+                    int bottom = i + 1;
+                    int left = j - 1;
+                    int right = j + 1;
+                    
+                    if (top >= 0)
                     {
-                        countAliveNeighbours++;
-
-                        // 2
-                        if (j - 1 >= 0 && _cellsStates[i - 1, j - 1])
+                        // 1
+                        if (Cells[top, j].IsAlive)
                         {
                             countAliveNeighbours++;
+                            //debugMessage += string.Format("{0}:{1} ", top, j);
+                        }
+
+                        // 2
+                        if (left >= 0 && Cells[top, left].IsAlive)
+                        {
+                            countAliveNeighbours++;
+                            //debugMessage += string.Format("{0}:{1} ", top, left);
                         }
 
                         // 3
-                        if (j + 1 < CellHeight && _cellsStates[i - 1, j + 1])
+                        if (right < NumColumns && Cells[top, right].IsAlive)
                         {
                             countAliveNeighbours++;
+                            //debugMessage += string.Format("{0}:{1} ", top, right);
                         }
                     }
-                    // 4
-                    if (i + 1 < CellWidth && _cellsStates[i + 1, j])
-                    {
-                        countAliveNeighbours++;
 
-                        // 5
-                        if (j - 1 >= 0 && _cellsStates[i + 1, j - 1])
+                    if (bottom < NumLines)
+                    {
+                        // 4
+                        if (Cells[bottom, j].IsAlive)
                         {
                             countAliveNeighbours++;
+                            //debugMessage += string.Format("{0}:{1} ", bottom, j);
+                        }
+
+                        // 5
+                        if (left >= 0 && Cells[bottom, left].IsAlive)
+                        {
+                            countAliveNeighbours++;
+                            //debugMessage += string.Format("{0}:{1} ", bottom, left);
                         }
 
                         // 6
-                        if (j + 1 < CellHeight && _cellsStates[i + 1, j + 1])
+                        if (right < NumColumns && Cells[bottom, right].IsAlive)
                         {
                             countAliveNeighbours++;
+                            //debugMessage += string.Format("{0}:{1} ", bottom, right);
                         }
                     }
 
                     // 7
-                    if (j - 1 >= 0 && _cellsStates[i, j - 1])
+                    if (left >= 0 && Cells[i, left].IsAlive)
                     {
                         countAliveNeighbours++;
+                        //debugMessage += string.Format("{0}:{1} ", i, left);
                     }
 
                     // 8
-                    if (j + 1 < CellHeight && _cellsStates[i, j + 1])
+                    if (right < NumColumns && Cells[i, right].IsAlive)
                     {
                         countAliveNeighbours++;
+                        //debugMessage += string.Format("{0}:{1} ", i, right);
                     }
 
-                    if (_cellsStates[i, j]) // is alive
+                    //if (countAliveNeighbours > 0)
+                    //{
+                    //    debugMessage += countAliveNeighbours;
+                    //    Debug.LogFormat(debugMessage);
+                    //}
+
+                    if (Cells[i, j].IsAlive) // is alive
                     {
                         // Any live cell with fewer than two live neighbours dies, as if by underpopulation.
-                        if (countAliveNeighbours < 2)
-                        {
-                            nextCellsStates[i, j] = false;
-                        }
                         // Any live cell with more than three live neighbours dies, as if by overpopulation.
-                        if (countAliveNeighbours > 2)
-                        {
-                            nextCellsStates[i, j] = false;
-                        }
                         // Any live cell with two or three live neighbours lives on to the next generation.
-                        else
+                        if (countAliveNeighbours == 2 || countAliveNeighbours == 3)
                         {
                             nextCellsStates[i, j] = true;
                         }
+
                     }
                     else if (countAliveNeighbours == 3) // Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
                     {
@@ -123,8 +137,7 @@ namespace EmanuelTavares.GameOfLife.Models
             {
                 for (int j = 0; j < NumColumns; j++)
                 {
-                    _cellsStates[i, j] = nextCellsStates[i, j];
-                    Cells[i, j].IsAlive = _cellsStates[i, j];
+                    Cells[i, j].IsAlive = nextCellsStates[i, j];
                 }
             }
         }
@@ -135,8 +148,7 @@ namespace EmanuelTavares.GameOfLife.Models
             {
                 for (int j = 0; j < NumColumns; j++)
                 {
-                    _cellsStates[i, j] = false;
-                    Cells[i, j].IsAlive = _cellsStates[i, j];
+                    Cells[i, j].IsAlive = false;
                 }
             }
         }

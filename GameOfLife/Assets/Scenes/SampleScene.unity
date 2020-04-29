@@ -675,12 +675,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2922c8c161cd3247a7e7ffe438fe689, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxTimeBetweenUpdates: 0.25
-  _numLines: 41
-  _numColumns: 86
-  _cellWidth: 0.25
-  _cellHeight: 0.25
-  _paused: 0
+  _maxTimeBetweenUpdates: 2
+  _numLines: 25
+  _numColumns: 50
+  _cellWidth: 0.35
+  _cellHeight: 0.35
+  _paused: 1
   _cellPrefab: {fileID: 7252811278804257786, guid: 5a64c3c730d292f48981af7600cdb37b,
     type: 3}
   _simulationStepText: {fileID: 557921406}
