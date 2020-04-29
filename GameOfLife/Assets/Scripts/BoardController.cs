@@ -43,8 +43,11 @@ namespace EmanuelTavares.GameOfLife.Controllers
 
                     ICellModel cellModelInstance = _boardModel.Cells[i, j];
                     cellModelInstance.Transform.localScale = new Vector3(cellWidth, cellHeight, 1f);
-                    cellModelInstance.GameObject.name = string.Format("{0}:{1}", i, j);
-                    cellModelInstance.Transform.localPosition = new Vector3(x, y, transform.localPosition.z);
+                    cellModelInstance.GameObject.name = string.Format("Cell [{0}:{1}]", i, j);
+
+                    Vector3 cellPosition = transform.TransformPoint(new Vector3(x, y, transform.localPosition.z));
+                    cellModelInstance.Transform.localPosition = cellPosition;
+                    cellModelInstance.Transform.parent = transform;
                 }
             }
         }

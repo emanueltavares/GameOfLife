@@ -47,6 +47,7 @@ MonoBehaviour:
   _renderer: {fileID: 7173829805404776952}
   _aliveCellMaterial: {fileID: 2100000, guid: 5fcec915d83fb804b8a3310b23139502, type: 2}
   _deadCellMaterial: {fileID: 2100000, guid: e043138238a300d48a20826f8c48ca90, type: 2}
+  _isAlive: 0
 --- !u!1 &7924571667933881175
 GameObject:
   m_ObjectHideFlags: 0

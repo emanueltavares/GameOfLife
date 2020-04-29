@@ -24,8 +24,8 @@ namespace EmanuelTavares.GameOfLife.Models
                 {
                     Cells[i, j] = cellModelPrototype.Clone();
 
-                    // get random value between 0 and 2 (exclusive). If equal to 0, 
-                    Cells[i, j].IsAlive = RandomExt.GetNextBool(); 
+                    //// get random value between 0 and 2 (exclusive). If equal to 0, 
+                    //Cells[i, j].IsAlive = RandomExt.GetNextBool(); 
                 }
             }
         }

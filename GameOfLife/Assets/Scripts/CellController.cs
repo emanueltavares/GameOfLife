@@ -10,10 +10,8 @@ namespace EmanuelTavares.GameOfLife.Controllers
         [SerializeField] private Renderer _renderer;
         [SerializeField] private Material _aliveCellMaterial;
         [SerializeField] private Material _deadCellMaterial;
+        [SerializeField] private bool _isAlive = false;
         #pragma warning restore CS0649
-
-        // Private variables
-        private bool _isAlive = false;
 
         // Properties
         public bool IsAlive
@@ -36,6 +34,19 @@ namespace EmanuelTavares.GameOfLife.Controllers
         public Transform Transform { get => transform; }
 
         // Methods
+
+        protected virtual void OnValidate()
+        {
+            if (_isAlive)
+            {
+                _renderer.material = _aliveCellMaterial;
+            }
+            else
+            {
+                _renderer.material = _deadCellMaterial;
+            }
+        }
+
         public ICellModel Clone()
         {
             return Instantiate(this);
