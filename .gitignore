@@ -9,6 +9,7 @@
 /[Gg]ame[Oo]f[Ll]ife/[Bb]uilds/
 /[Gg]ame[Oo]f[Ll]ife/[Ll]ogs/
 /[Gg]ame[Oo]f[Ll]ife/[Uu]ser[Ss]ettings/
+/[Gg]ame[Oo]f[Ll]ife/[Pp]roject[Ss]ettings/[Pp]roject[Vv]ersion.txt
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
@@ -61,4 +62,3 @@ sysinfo.txt
 
 # Crashlytics generated file
 crashlytics-build.properties
-
